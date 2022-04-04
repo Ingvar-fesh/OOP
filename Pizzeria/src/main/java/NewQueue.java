@@ -1,20 +1,20 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class SharedQueue<T> {
+public class NewQueue<T> {
     private final Queue<T> queue;
-    private final int capacityQueue; // maximum possible capacity of the shared queue
+    private final int capacityQueue;
     private final Object EMPTY = new Object(); // for locking on empty queue
     private final Object FULL = new Object(); // for locking on full queue
 
-    SharedQueue(int capacityQueue) {
+    NewQueue(int capacityQueue) {
         this.queue = new LinkedList<>();
         this.capacityQueue = capacityQueue;
     }
 
     /**
      * Check if queue is empty
-     * @return <code>true</code> if queue contains no elements or <code>false</code> otherwise.
+     * @return true if queue contains no elements or false otherwise.
      */
     public boolean isEmpty() {
         synchronized (this.queue) {
@@ -24,7 +24,7 @@ public class SharedQueue<T> {
 
     /**
      * Checks if queue is full.
-     * @return <code>true</code> if queue contains <code>maxSize</code> elements or <code>false</code> otherwise.
+     * @return true if queue contains maxSize elements or false otherwise.
      */
     public boolean isFull() {
         synchronized (this.queue) {
@@ -34,7 +34,6 @@ public class SharedQueue<T> {
 
     /**
      * Add new element - data in queue
-     * @param data
      */
     public void add(T data) {
         synchronized (this.queue) {
@@ -54,7 +53,6 @@ public class SharedQueue<T> {
 
     /**
      * Locks when queue is empty.
-     * @throws InterruptedException If waiting was interrupted unexpectedly.
      */
     public void waitEmpty() throws InterruptedException {
         synchronized (this.EMPTY) {
@@ -64,7 +62,6 @@ public class SharedQueue<T> {
 
     /**
      * Locks when queue is full
-     * @throws InterruptedException If waiting was interrupted unexpectedly.
      */
     public void waitFull() throws InterruptedException {
         synchronized (this.FULL) {

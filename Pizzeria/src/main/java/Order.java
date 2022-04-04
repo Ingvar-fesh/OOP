@@ -23,23 +23,20 @@ public class Order {
 
     /**
      * Update state in order
-     * @return <code>true</code> if state was updated or <code>false</code> otherwise.
      */
-    public boolean updateState() {
+    public void updateState() {
         State[] values = State.values();
         int nextState = this.state.ordinal() + 1;
         if (nextState < values.length) {
             this.state = values[nextState];
-            return true;
         }
-        return false;
     }
 
     /**
      * Prints state of the order.
      */
     public void printState() {
-        System.out.printf("%7d |%11s\n", this.number, this.state.toString());
+        System.out.printf("№%d - %11s\n", this.number, this.state.toString());
     }
 
     /**

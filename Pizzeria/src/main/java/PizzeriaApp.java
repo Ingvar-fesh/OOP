@@ -11,12 +11,12 @@ public class PizzeriaApp implements Runnable {
     private final Pizzeria pizzeria; // instance of pizzeria class
     private final Random random;
     private final Path filePath; // default pizzeria file
-    private final int QUEUE_CAPACITY = 50; // // maximum capacity of the shared queue
-    private final int N_BAKERS = 10; // default number of bakers
+    private final int maxQueueCapacity = 50; // // maximum capacity of the shared queue
+    private final int countBakers = 10; // default number of bakers
     private final int BAKERS_COOK_TIME = 100; // default maximum time cooking for each baker
-    private final int N_DELIVERERS = 10; // default number of deliverers
-    private final int DELIVERERS_CAPACITY = 5; // default maximum capacity deliverer's bag
-    private final int TIME = 1000; // // execution time
+    private final int countDeliverers = 10; // default number of deliverers
+    private final int maxBagCapacity = 5; // default maximum capacity deliverer's bag
+    private final int TIME = 10000; // // execution time
 
 
     /**
@@ -36,8 +36,6 @@ public class PizzeriaApp implements Runnable {
      */
     @Override
     public void run() {
-        System.out.printf("%7s |%11s\n", "number", "state");
-        System.out.printf("%8s+%12s\n", "--------", "------------");
         this.pizzeria.start();
         try {
             Thread.sleep(this.TIME);
@@ -54,12 +52,12 @@ public class PizzeriaApp implements Runnable {
                 Files.createFile(this.filePath);
             }
             Writer writer = Files.newBufferedWriter(this.filePath);
-            int[] pizzaiolosCookTime = new int[this.N_BAKERS];
-            int[] deliverersCapacity = new int[this.N_DELIVERERS];
-            Arrays.setAll(pizzaiolosCookTime, i -> this.random.nextInt(this.BAKERS_COOK_TIME) + 1);
-            Arrays.setAll(deliverersCapacity, i -> this.random.nextInt(this.DELIVERERS_CAPACITY) + 1);
-            PizzeriaConfiguration pizzeriaConfigurator = new PizzeriaConfiguration(this.QUEUE_CAPACITY, this.N_BAKERS, pizzaiolosCookTime, this.N_DELIVERERS, deliverersCapacity);
-            pizzeriaConfigurator.serialize(writer);
+            int[] bakersCookingTime = new int[this.countBakers];
+            int[] deliverersCapacity = new int[this.countDeliverers];
+            Arrays.setAll(bakersCookingTime, i -> this.random.nextInt(this.BAKERS_COOK_TIME) + 1);
+            Arrays.setAll(deliverersCapacity, i -> this.random.nextInt(this.maxBagCapacity) + 1);
+            Configuration configuration = new Configuration(this.maxQueueCapacity, this.countBakers, bakersCookingTime, this.countDeliverers, deliverersCapacity);
+            configuration.serialize(writer);
             writer.close();
         } catch(IOException e) {
             e.printStackTrace();
@@ -68,17 +66,16 @@ public class PizzeriaApp implements Runnable {
 
     /**
      * Creates pizzeria configurator from json file.
-     * @return
      */
-    private PizzeriaConfiguration getConfiguration() {
-        PizzeriaConfiguration pizzeriaConfigurator = new PizzeriaConfiguration();
+    private Configuration getConfiguration() {
+        Configuration configuration = new Configuration();
         try {
             Reader reader = Files.newBufferedReader(this.filePath);
-            pizzeriaConfigurator.deserialize(reader);
+            configuration.deserialize(reader);
             reader.close();
         } catch(IOException e) {
             e.printStackTrace();
         }
-        return pizzeriaConfigurator;
+        return configuration;
     }
 }

@@ -1,13 +1,13 @@
 import java.util.Random;
 
 public class Customer implements Runnable{
-    private final SharedQueue<Order> ordersQueue; // list of orders
+    private final NewQueue<Order> ordersQueue; // list of orders
     private boolean isRunning; // status flag
-    private Random random;
-    private int MAX_DELIVERY_TIME = 500; // maximum possible time of delivering order
-    private int MAX_SLEEP_TIME = 100; // maximum possible time between producing new orders
+    private final Random random;
+    private final int MAX_DELIVERY_TIME = 200; // maximum possible time of delivering order
+    private final int MAX_SLEEP_TIME = 100; // maximum possible time between producing new orders
 
-    Customer(SharedQueue<Order> orders) {
+    Customer(NewQueue<Order> orders) {
         this.ordersQueue = orders;
         this.isRunning = true;
         this.random = new Random();

@@ -1,13 +1,13 @@
 import java.util.*;
 
 public class Deliverer implements Runnable{
-    private SharedQueue<Order> deliveryQueue; // pizzas list
-    private int maxBagCapacity; // maximum capacity of bag
+    private final NewQueue<Order> deliveryQueue; // pizzas list
+    private final int maxBagCapacity; // maximum capacity of bag
     private boolean isRunning; // status flag
-    private Random random;
+    private final Random random;
     private int MAX_SLEEP_TIME = 300; // maximum possible time between delivering pizzas
 
-    Deliverer(SharedQueue<Order> deliveryQueue, int maxBagCapacity) {
+    Deliverer(NewQueue<Order> deliveryQueue, int maxBagCapacity) {
         this.deliveryQueue = deliveryQueue;
         this.maxBagCapacity = maxBagCapacity;
         this.random = new Random();
@@ -31,6 +31,7 @@ public class Deliverer implements Runnable{
                         }
                     }
                 }
+
                 if (!this.isRunning) {
                     break;
                 }
@@ -42,6 +43,7 @@ public class Deliverer implements Runnable{
                 orders.add(order);
                 this.deliveryQueue.notifyFull();
             }
+
             for(Order order : orders) {
                 order.updateState();
                 order.printState();

@@ -7,13 +7,13 @@ public class Pizzeria {
     private final Customer customers; // generating orders
     private final List<Baker> bakers; // generating pizzas
     private final List<Deliverer> deliverers; // generating delivering pizzas
-    private final SharedQueue<Order> ordersQueue; // list of orders
-    private final SharedQueue<Order> deliveryQueue; // list of pizzas
+    private final NewQueue<Order> ordersQueue; // list of orders
+    private final NewQueue<Order> deliveryQueue; // list of pizzas
     private int MAX_SLEEP_TIME = 1000; // time for sleep before stopping
 
-    Pizzeria(PizzeriaConfiguration pizzeriaConfiguration) {
-        this.ordersQueue = new SharedQueue<>(0);
-        this.deliveryQueue = new SharedQueue<>(pizzeriaConfiguration.getMaxQueueCapacity());
+    Pizzeria(Configuration pizzeriaConfiguration) {
+        this.ordersQueue = new NewQueue<>(0);
+        this.deliveryQueue = new NewQueue<>(pizzeriaConfiguration.getMaxQueueCapacity());
         this.customers = new Customer(this.ordersQueue);
         this.bakers = Arrays.stream(pizzeriaConfiguration.getBakersCookTime()).mapToObj(bakersCookTime -> new Baker(this.ordersQueue, this.deliveryQueue, bakersCookTime)).collect(Collectors.toCollection(ArrayList::new));
         this.deliverers = Arrays.stream(pizzeriaConfiguration.getDeliverersCapacity()).mapToObj(delivererCapacity -> new Deliverer(this.deliveryQueue, delivererCapacity)).collect(Collectors.toCollection(ArrayList::new));
