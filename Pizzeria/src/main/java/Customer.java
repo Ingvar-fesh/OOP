@@ -22,7 +22,7 @@ public class Customer implements Runnable{
             Order order = new Order(i, random.nextInt(this.MAX_DELIVERY_TIME));
             this.ordersQueue.add(order);
             order.printState();
-            this.ordersQueue.notifyEmpty();
+            this.ordersQueue.notifyNotEmpty();
             try {
                 Thread.sleep(this.random.nextInt(MAX_SLEEP_TIME));
             } catch (InterruptedException e) {

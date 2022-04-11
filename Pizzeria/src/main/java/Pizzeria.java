@@ -10,7 +10,7 @@ public class Pizzeria {
     private final NewQueue<Order> ordersQueue; // list of orders
     private final NewQueue<Order> deliveryQueue; // list of pizzas
     private int MAX_SLEEP_TIME = 1000; // time for sleep before stopping
-    private final Object BlockingDeliverers = new Object();
+    private final Object BlockingDeliverers = new Object(); // for blocking deliverers
 
     Pizzeria(Configuration pizzeriaConfiguration) {
         this.ordersQueue = new NewQueue<>(0);

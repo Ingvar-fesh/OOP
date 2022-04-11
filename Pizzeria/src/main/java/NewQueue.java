@@ -72,7 +72,7 @@ public class NewQueue<T> {
     /**
      * Releases lock when queue is not empty.
      */
-    public void notifyEmpty() {
+    public void notifyNotEmpty() {
         synchronized(this.EMPTY) {
             this.EMPTY.notifyAll();
         }
@@ -81,7 +81,7 @@ public class NewQueue<T> {
     /**
      * Releases lock when queue is not full.
      */
-    public void notifyFull() {
+    public void notifyNotFull() {
         synchronized(this.FULL) {
             this.FULL.notifyAll();
         }

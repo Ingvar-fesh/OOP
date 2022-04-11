@@ -71,6 +71,6 @@ public class Deliverer implements Runnable{
      */
     public void stop() {
         this.isRunning = false;
-        this.deliveryQueue.notifyEmpty();
+        this.deliveryQueue.notifyNotFull();
     }
 }

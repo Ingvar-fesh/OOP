@@ -16,7 +16,7 @@ public class PizzeriaApp implements Runnable {
     private final int bakersCookingTime = 100; // default maximum time cooking for each baker
     private final int countDeliverers = 10; // default number of deliverers
     private final int maxBagCapacity = 5; // default maximum capacity deliverer's bag
-    private final int TIME = 10000; // // execution time
+    private final int TIME = 10000; //execution time
 
 
     /**

@@ -48,16 +48,13 @@ public class Baker implements Runnable {
                     }
                 }
             }
-
             if(!this.isRunning) {
                 break;
             }
-
             this.deliveryQueue.add(order);
-
             order.updateState();
             order.printState();
-            this.deliveryQueue.notifyEmpty();
+            this.deliveryQueue.notifyNotEmpty();
         }
     }
 
@@ -66,7 +63,7 @@ public class Baker implements Runnable {
      */
     public void stop() {
         this.isRunning = false;
-        this.ordersQueue.notifyEmpty();
-        this.deliveryQueue.notifyFull();
+        this.ordersQueue.notifyNotEmpty();
+        this.deliveryQueue.notifyNotFull();
     }
 }
