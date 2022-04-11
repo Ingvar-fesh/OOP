@@ -41,7 +41,7 @@ public class Configuration {
     }
 
     /**
-     * Serializes content of this <code>PizzeriaConfigurator</code> to the specified writer.
+     * Serializes content of this Configuration to the specified writer.
      * @param writer Writer stream for serialization.
      */
     public void serialize(Writer writer) {
@@ -49,15 +49,15 @@ public class Configuration {
     }
 
     /**
-     * Deserializes content of this <code>PizzeriaConfigurator</code> to the specified reader.
+     * Deserializes content of this Configuration to the specified reader.
      * @param reader Reader stream for deserialization.
      */
     public void deserialize(Reader reader) {
-        Configuration pizzeriaConfigurator = gson.fromJson(reader, Configuration.class);
-        this.maxQueueCapacity = pizzeriaConfigurator.maxQueueCapacity;
-        this.countBakers = pizzeriaConfigurator.countBakers;
-        this.bakersCookTime = pizzeriaConfigurator.bakersCookTime;
-        this.countDeliverers = pizzeriaConfigurator.countDeliverers;
-        this.deliverersCapacity = pizzeriaConfigurator.deliverersCapacity;
+        Configuration configuration = gson.fromJson(reader, Configuration.class);
+        this.maxQueueCapacity = configuration.maxQueueCapacity;
+        this.countBakers = configuration.countBakers;
+        this.bakersCookTime = configuration.bakersCookTime;
+        this.countDeliverers = configuration.countDeliverers;
+        this.deliverersCapacity = configuration.deliverersCapacity;
     }
 }

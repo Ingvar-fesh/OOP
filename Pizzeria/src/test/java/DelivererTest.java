@@ -19,6 +19,7 @@ class DelivererTest {
     private final int maxQueueSize = 20;  // maximum capacity of the shared queue
     private final int maxDeliveringTime = 500;  //maximum possible time of delivering order
     private final int SLEEP_TIME = 1000;  // time for testing
+    private Object BlockingDeliverers = new Object();
 
 
     private void setUp() {
@@ -27,7 +28,7 @@ class DelivererTest {
         IntStream.range(0, countOrders ).forEach(i -> deliveryQueue.add(new Order(i, random.nextInt(maxDeliveringTime))));
         deliverersCapacity = new int[countDeliverers];
         Arrays.setAll(deliverersCapacity, i -> random.nextInt(maxCapacityBag));
-        deliverers = Arrays.stream(deliverersCapacity).mapToObj(delivererCapacity -> new Deliverer(deliveryQueue, delivererCapacity)).collect(Collectors.toCollection(ArrayList::new));
+        deliverers = Arrays.stream(deliverersCapacity).mapToObj(delivererCapacity -> new Deliverer(deliveryQueue, delivererCapacity, this.BlockingDeliverers)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Test

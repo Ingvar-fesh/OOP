@@ -6,11 +6,13 @@ public class Deliverer implements Runnable{
     private boolean isRunning; // status flag
     private final Random random;
     private int MAX_SLEEP_TIME = 300; // maximum possible time between delivering pizzas
+    private final Object BlockingDeliverers; // for blocking deliverers
 
-    Deliverer(NewQueue<Order> deliveryQueue, int maxBagCapacity) {
+    Deliverer(NewQueue<Order> deliveryQueue, int maxBagCapacity, Object BlockingDeliverers) {
         this.deliveryQueue = deliveryQueue;
         this.maxBagCapacity = maxBagCapacity;
         this.random = new Random();
+        this.BlockingDeliverers = BlockingDeliverers;
         this.isRunning = true;
     }
 
@@ -21,27 +23,32 @@ public class Deliverer implements Runnable{
     public void run() {
         while(this.isRunning) {
             List<Order> orders = new ArrayList<>(this.maxBagCapacity);
-            for(int i = 0; i < this.maxBagCapacity; i++) {
-                while (this.deliveryQueue.isEmpty()) {
+            synchronized (this.BlockingDeliverers) {
+                int countPizzasInBag = 0;
+                while (!this.deliveryQueue.isEmpty()) {
+                    if (countPizzasInBag < this.maxBagCapacity) {
+                        Order order = this.deliveryQueue.remove();
+                        orders.add(order);
+                        ++countPizzasInBag;
+                    }
+                    else break;
+                }
+
+                if(!this.isRunning) {
+                    break;
+                }
+
+                if (this.deliveryQueue.isEmpty()) {
                     try {
                         this.deliveryQueue.waitEmpty();
                     } catch (InterruptedException e) {
-                        if(!this.isRunning) {
-                            break;
-                        }
+                        e.printStackTrace();
                     }
                 }
+            }
 
-                if (!this.isRunning) {
-                    break;
-                }
-                Order order = this.deliveryQueue.remove();
-                if(order == null) {
-                    --i;
-                    continue;
-                }
-                orders.add(order);
-                this.deliveryQueue.notifyFull();
+            if(!this.isRunning) {
+                break;
             }
 
             for(Order order : orders) {

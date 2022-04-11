@@ -13,7 +13,7 @@ public class PizzeriaApp implements Runnable {
     private final Path filePath; // default pizzeria file
     private final int maxQueueCapacity = 50; // // maximum capacity of the shared queue
     private final int countBakers = 10; // default number of bakers
-    private final int BAKERS_COOK_TIME = 100; // default maximum time cooking for each baker
+    private final int bakersCookingTime = 100; // default maximum time cooking for each baker
     private final int countDeliverers = 10; // default number of deliverers
     private final int maxBagCapacity = 5; // default maximum capacity deliverer's bag
     private final int TIME = 10000; // // execution time
@@ -54,7 +54,7 @@ public class PizzeriaApp implements Runnable {
             Writer writer = Files.newBufferedWriter(this.filePath);
             int[] bakersCookingTime = new int[this.countBakers];
             int[] deliverersCapacity = new int[this.countDeliverers];
-            Arrays.setAll(bakersCookingTime, i -> this.random.nextInt(this.BAKERS_COOK_TIME) + 1);
+            Arrays.setAll(bakersCookingTime, i -> this.random.nextInt(this.bakersCookingTime) + 1);
             Arrays.setAll(deliverersCapacity, i -> this.random.nextInt(this.maxBagCapacity) + 1);
             Configuration configuration = new Configuration(this.maxQueueCapacity, this.countBakers, bakersCookingTime, this.countDeliverers, deliverersCapacity);
             configuration.serialize(writer);

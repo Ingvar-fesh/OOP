@@ -1,12 +1,12 @@
 public class Baker implements Runnable {
-    private final NewQueue<Order> orders;
-    private final NewQueue<Order> pizzas;
+    private final NewQueue<Order> ordersQueue;
+    private final NewQueue<Order> deliveryQueue;
     private boolean isRunning;
     private final int cookingTime;
 
-    Baker(NewQueue<Order> orders, NewQueue<Order> pizzas, int cookingTime) {
-        this.orders = orders;
-        this.pizzas = pizzas;
+    Baker(NewQueue<Order> ordersQueue, NewQueue<Order> deliveryQueue, int cookingTime) {
+        this.ordersQueue = ordersQueue;
+        this.deliveryQueue = deliveryQueue;
         this.cookingTime = cookingTime;
         this.isRunning = true;
     }
@@ -17,34 +17,31 @@ public class Baker implements Runnable {
     @Override
     public void run() {
         while(this.isRunning) {
-            while (this.orders.isEmpty()) {
+            while (this.ordersQueue.isEmpty()) {
                 try {
-                    this.orders.waitEmpty();
+                    this.ordersQueue.waitEmpty();
                 } catch (InterruptedException e) {
                     if(!this.isRunning) {
                         break;
                     }
                 }
             }
-
             if(!this.isRunning) {
                 break;
             }
-            Order order = this.orders.remove();
+            Order order = this.ordersQueue.remove();
             if(order == null) {
                 continue;
             }
             order.updateState();
             order.printState();
-            this.orders.notifyFull();
-
             try {
                 Thread.sleep(this.cookingTime);
             } catch (InterruptedException ignored) {}
 
-            while(this.pizzas.isFull()) {
+            while(this.deliveryQueue.isFull()) {
                 try {
-                    this.pizzas.waitFull();
+                    this.deliveryQueue.waitFull();
                 } catch (InterruptedException e) {
                     if(!this.isRunning) {
                         break;
@@ -56,10 +53,11 @@ public class Baker implements Runnable {
                 break;
             }
 
-            this.pizzas.add(order);
+            this.deliveryQueue.add(order);
+
             order.updateState();
             order.printState();
-            this.pizzas.notifyEmpty();
+            this.deliveryQueue.notifyEmpty();
         }
     }
 
@@ -68,7 +66,7 @@ public class Baker implements Runnable {
      */
     public void stop() {
         this.isRunning = false;
-        this.orders.notifyEmpty();
-        this.pizzas.notifyFull();
+        this.ordersQueue.notifyEmpty();
+        this.deliveryQueue.notifyFull();
     }
 }

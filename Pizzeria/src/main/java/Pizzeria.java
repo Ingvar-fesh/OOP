@@ -10,13 +10,14 @@ public class Pizzeria {
     private final NewQueue<Order> ordersQueue; // list of orders
     private final NewQueue<Order> deliveryQueue; // list of pizzas
     private int MAX_SLEEP_TIME = 1000; // time for sleep before stopping
+    private final Object BlockingDeliverers = new Object();
 
     Pizzeria(Configuration pizzeriaConfiguration) {
         this.ordersQueue = new NewQueue<>(0);
         this.deliveryQueue = new NewQueue<>(pizzeriaConfiguration.getMaxQueueCapacity());
         this.customers = new Customer(this.ordersQueue);
         this.bakers = Arrays.stream(pizzeriaConfiguration.getBakersCookTime()).mapToObj(bakersCookTime -> new Baker(this.ordersQueue, this.deliveryQueue, bakersCookTime)).collect(Collectors.toCollection(ArrayList::new));
-        this.deliverers = Arrays.stream(pizzeriaConfiguration.getDeliverersCapacity()).mapToObj(delivererCapacity -> new Deliverer(this.deliveryQueue, delivererCapacity)).collect(Collectors.toCollection(ArrayList::new));
+        this.deliverers = Arrays.stream(pizzeriaConfiguration.getDeliverersCapacity()).mapToObj(delivererCapacity -> new Deliverer(this.deliveryQueue, delivererCapacity, this.BlockingDeliverers)).collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -42,5 +43,8 @@ public class Pizzeria {
             Thread.sleep(this.MAX_SLEEP_TIME);
         } catch (InterruptedException ignored) {}
         this.deliverers.forEach(Deliverer::stop);
+        try {
+            Thread.sleep(this.MAX_SLEEP_TIME);
+        } catch (InterruptedException ignored) {}
     }
 }
