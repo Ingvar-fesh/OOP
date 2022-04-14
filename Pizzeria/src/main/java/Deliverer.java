@@ -21,8 +21,8 @@ public class Deliverer implements Runnable{
      */
     @Override
     public void run() {
+        List<Order> orders = new ArrayList<>(this.maxBagCapacity);
         while(this.isRunning) {
-            List<Order> orders = new ArrayList<>(this.maxBagCapacity);
             synchronized (this.BlockingDeliverers) {
                 int countPizzasInBag = 0;
                 while (!this.deliveryQueue.isEmpty()) {
@@ -32,18 +32,6 @@ public class Deliverer implements Runnable{
                         ++countPizzasInBag;
                     }
                     else break;
-                }
-
-                if(!this.isRunning) {
-                    break;
-                }
-
-                if (this.deliveryQueue.isEmpty()) {
-                    try {
-                        this.deliveryQueue.waitEmpty();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
 
@@ -60,6 +48,8 @@ public class Deliverer implements Runnable{
                 order.updateState();
                 order.printState();
             }
+            orders.clear();
+
             try {
                 Thread.sleep(this.random.nextInt(this.MAX_SLEEP_TIME));
             } catch (InterruptedException ignored) {}

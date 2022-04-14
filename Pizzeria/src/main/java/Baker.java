@@ -35,6 +35,7 @@ public class Baker implements Runnable {
             }
             order.updateState();
             order.printState();
+
             try {
                 Thread.sleep(this.cookingTime);
             } catch (InterruptedException ignored) {}
@@ -48,9 +49,11 @@ public class Baker implements Runnable {
                     }
                 }
             }
+
             if(!this.isRunning) {
                 break;
             }
+
             this.deliveryQueue.add(order);
             order.updateState();
             order.printState();

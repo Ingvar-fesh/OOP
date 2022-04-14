@@ -32,6 +32,14 @@ public class Configuration {
         return maxQueueCapacity;
     }
 
+    public int getCountBakers() {
+        return countBakers;
+    }
+
+    public int getCountDeliverers() {
+        return countDeliverers;
+    }
+
     public int[] getBakersCookTime() {
         return this.bakersCookTime;
     }
