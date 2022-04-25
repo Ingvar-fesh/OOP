@@ -22,7 +22,7 @@ public class PizzeriaApp implements Runnable {
     /**
      * Default constructor to initialize internal structures.
      */
-    public PizzeriaApp() {
+    PizzeriaApp() {
         this.random = new Random();
         this.filePath = Paths.get("Pizzeria.json");
         if (!Files.exists(this.filePath)) {

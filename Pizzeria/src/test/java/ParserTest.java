@@ -17,7 +17,7 @@ class ParserTest {
 
     @Test
     public void parserTest() {
-        Configuration configuration = new Configuration();
+        Configuration configuration;
         configuration = getConfiguration();
         Assertions.assertArrayEquals(configuration.getBakersCookTime(), new int [] {61, 23, 78, 99, 46, 83, 58, 32, 41, 41});
         Assertions.assertArrayEquals(configuration.getDeliverersCapacity(), new int[] {5, 3, 4, 5, 5, 2, 4, 4, 2, 2});
