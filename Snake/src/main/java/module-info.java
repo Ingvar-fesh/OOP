@@ -1,8 +1,9 @@
-module com.example.snake {
+module nsu.feshchenko.snake {
+    requires java.desktop;
     requires javafx.controls;
     requires javafx.fxml;
-    requires java.desktop;
 
-    opens com.example.snake to javafx.fxml;
-    exports com.example.snake;
+
+    opens nsu.feshchenko.snake to javafx.fxml;
+    exports nsu.feshchenko.snake;
 }

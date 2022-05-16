@@ -5,7 +5,7 @@ plugins {
     id 'org.beryx.jlink' version '2.24.1'
 }
 
-group 'com.example'
+group 'nsu.feshchenko'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -24,8 +24,8 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'com.example.snake'
-    mainClass = 'com.example.snake.HelloApplication'
+    mainModule = 'nsu.feshchenko.snake'
+    mainClass = 'nsu.feshchenko.snake.HelloApplication'
 }
 
 javafx {
