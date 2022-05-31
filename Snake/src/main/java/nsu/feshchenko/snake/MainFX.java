@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import nsu.feshchenko.snake.graphics.Graphics;
 import nsu.feshchenko.snake.models.*;
-import nsu.feshchenko.snake.*;
 
 import java.awt.*;
 import java.io.IOException;
@@ -24,13 +23,15 @@ import java.util.concurrent.TimeUnit;
 
 public class MainFX extends Application {
     private Direction currentDirection = Direction.STOP;
-    private nsu.feshchenko.snake.models.Parameters parameters = new SettingWindow().tellParameters();
+    private final nsu.feshchenko.snake.models.Parameters parameters = new SettingWindow().tellParameters();
     private FoodGenerator foodGenerator = new FoodGenerator(parameters.getCountFoods(), parameters.getGoal());
     private Snake snake = new Snake();
     private Field field = new Field(parameters.getFieldSize());
-    private Graphics graphicsWork = new Graphics();
+    private final Graphics graphicsWork = new Graphics();
     private BarrierGenerator barrierGenerator = new BarrierGenerator(parameters.getBarriersAmount());
     private Timeline timeline;
+
+    private int speed = 150;
 
     public MainFX() {
 
@@ -40,6 +41,7 @@ public class MainFX extends Application {
         this.barrierGenerator = new BarrierGenerator(parameters.getBarriersAmount());
         this.snake = new Snake();
         this.field = new Field(parameters.getFieldSize());
+        this.speed = parameters.getSpeed();
     }
 
     @Override
@@ -56,29 +58,41 @@ public class MainFX extends Application {
 
         scene.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
-            if (code == KeyCode.RIGHT || code == KeyCode.D) {
-                if (currentDirection != Direction.LEFT) {
-                    currentDirection = Direction.RIGHT;
+            if (snake.getBody().size() == 1) {
+                if (code == KeyCode.RIGHT || code == KeyCode.D) {
+                        currentDirection = Direction.RIGHT;
+                } else if (code == KeyCode.LEFT || code == KeyCode.A) {
+                        currentDirection = Direction.LEFT;
+                } else if (code == KeyCode.UP || code == KeyCode.W) {
+                        currentDirection = Direction.UP;
+                } else if (code == KeyCode.DOWN || code == KeyCode.S) {
+                        currentDirection = Direction.DOWN;
                 }
-            } else if (code == KeyCode.LEFT || code == KeyCode.A) {
-                if (currentDirection != Direction.RIGHT) {
-                    currentDirection = Direction.LEFT;
-                }
-            } else if (code == KeyCode.UP || code == KeyCode.W) {
-                if (currentDirection != Direction.DOWN) {
-                    currentDirection = Direction.UP;
-                }
-            } else if (code == KeyCode.DOWN || code == KeyCode.S) {
-                if (currentDirection != Direction.UP) {
-                    currentDirection = Direction.DOWN;
+            }
+            else {
+                if (code == KeyCode.RIGHT || code == KeyCode.D) {
+                    if (currentDirection != Direction.LEFT)
+                        currentDirection = Direction.RIGHT;
+                } else if (code == KeyCode.LEFT || code == KeyCode.A) {
+                    if (currentDirection != Direction.RIGHT)
+                        currentDirection = Direction.LEFT;
+                } else if (code == KeyCode.UP || code == KeyCode.W) {
+                    if (currentDirection != Direction.DOWN)
+                        currentDirection = Direction.UP;
+                } else if (code == KeyCode.DOWN || code == KeyCode.S) {
+                    if (currentDirection != Direction.UP)
+                        currentDirection = Direction.DOWN;
                 }
             }
         });
+        snake.initSnake(field.getROWS(), field.getCOLUMNS());
         barrierGenerator.generateBarriers(field.getROWS(), field.getCOLUMNS());
         foodGenerator.generatorFoods(snake.getBody(), field.getROWS(), field.getCOLUMNS(), barrierGenerator.getBarriers());
-        snake.initSnake(field.getROWS(), field.getCOLUMNS());
-        timeline = new Timeline(new KeyFrame(Duration.millis(120), e -> {
+        timeline = new Timeline(new KeyFrame(Duration.millis(speed), e -> {
             try {
+                graphicsWork.drawBackground(gc, field.getROWS(), field.getCOLUMNS(), field.getSQUARE_SIZE());
+                graphicsWork.drawBarriers(gc, field.getSQUARE_SIZE(), barrierGenerator.getBarriers());
+                graphicsWork.drawGoal(gc, foodGenerator.getGoal());
                 run(gc, stage);
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -101,13 +115,11 @@ public class MainFX extends Application {
             loader.setLocation(getClass().getResource("win.fxml"));
             transitionToNewFxml(stageStart, loader);
         }
-        graphicsWork.drawBackground(gc, field.getROWS(), field.getCOLUMNS(), field.getSQUARE_SIZE());
-        graphicsWork.drawBarriers(gc, field.getSQUARE_SIZE(), barrierGenerator.getBarriers());
         graphicsWork.drawFood(gc, field.getSQUARE_SIZE(), foodGenerator.getFoods());
         graphicsWork.drawScore(gc, foodGenerator.getCurrentFoods());
-        graphicsWork.drawGoal(gc, foodGenerator.getGoal());
-        eatFood();
         graphicsWork.drawSnake(gc, snake.getHead(), snake.getBody(), field.getSQUARE_SIZE());
+        eatFood();
+
 
         if (snake.getBody().size() > 1) {
             Point newElem = snake.getBody().get(snake.getBody().size() - 1);

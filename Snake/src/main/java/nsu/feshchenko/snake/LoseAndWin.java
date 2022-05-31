@@ -18,7 +18,7 @@ public class LoseAndWin {
         okayButton.setOnAction(event -> {
             okayButton.getScene().getWindow().hide();
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("restart.fxml"));
+            loader.setLocation(getClass().getResource("hello-view.fxml"));
 
             try {
                 loader.load();

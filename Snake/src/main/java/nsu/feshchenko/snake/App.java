@@ -48,6 +48,7 @@ public class App {
             stage.setScene(new Scene(root));
             stage.show();
         });
+
         exitButton.setOnAction(event -> {
             exitButton.getScene().getWindow().hide();
         });

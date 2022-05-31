@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Graphics {
-    private final String foodImages = new String("/images/banana.png");
+    private final String foodImages = "/images/banana.png";
     private Image image;
 
     public void drawBarriers(GraphicsContext gc, int squareSize, List<Point> barriers) {
@@ -42,8 +42,8 @@ public class Graphics {
     }
 
     public void drawSnake(GraphicsContext gc, Point snakeHead, List<Point> snakeBody, int squareSize) {
-        gc.setFill(Color.web("F2C97C"));
-        gc.fillRoundRect(snakeHead.getX() * squareSize, snakeHead.getY() * squareSize, squareSize - 1, squareSize - 1, 35, 35);
+        gc.setFill(Color.RED);
+        gc.fillRoundRect(snakeHead.getX() * squareSize, snakeHead.getY() * squareSize, squareSize - 1, squareSize - 1, 45, 45);
         for (int i = 1; i < snakeBody.size(); i++) {
             gc.fillRoundRect(snakeBody.get(i).getX() * squareSize, snakeBody.get(i).getY() * squareSize, squareSize - 1,
                     squareSize - 1, 20, 20);
