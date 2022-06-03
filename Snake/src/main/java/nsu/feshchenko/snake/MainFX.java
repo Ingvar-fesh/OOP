@@ -21,24 +21,25 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+
+
 public class MainFX extends Application {
     private Direction currentDirection = Direction.STOP;
-    private final nsu.feshchenko.snake.models.Parameters parameters = new SettingWindow().tellParameters();
-    private FoodGenerator foodGenerator = new FoodGenerator(parameters.getCountFoods(), parameters.getGoal());
-    private Snake snake = new Snake();
-    private Field field = new Field(parameters.getFieldSize());
+
+    private Data parameters ;
+
+    private FoodGenerator foodGenerator;
+    private Snake snake;
+    private Field field;
     private final Graphics graphicsWork = new Graphics();
-    private BarrierGenerator barrierGenerator = new BarrierGenerator(parameters.getBarriersAmount());
+    private BarrierGenerator barrierGenerator;
     private Timeline timeline;
 
-    private int speed = 150;
+    private int speed;
 
-    public MainFX() {
-
-    }
-    public MainFX(nsu.feshchenko.snake.models.Parameters parameters) {
+    public MainFX(Data parameters) {
         this.foodGenerator = new FoodGenerator(parameters.getCountFoods(), parameters.getGoal());
-        this.barrierGenerator = new BarrierGenerator(parameters.getBarriersAmount());
+        this.barrierGenerator = new BarrierGenerator(parameters.getCountBarriers());
         this.snake = new Snake();
         this.field = new Field(parameters.getFieldSize());
         this.speed = parameters.getSpeed();

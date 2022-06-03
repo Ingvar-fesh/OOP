@@ -8,22 +8,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import nsu.feshchenko.snake.models.Parameters;
+import nsu.feshchenko.snake.models.Data;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
 public class SettingWindow {
-    private int mapSize = 20;
-    private int countFoods = 5;
-    private int countBarriers = 13;
-    private int goal = 20;
-    private int speed = 150;
-    private Parameters parameters = new Parameters();
+    private int mapSize;
+    private int countFoods;
+    private int countBarriers;
+    private int goal;
+    private int speed;
+    private final Data parameters = Data.getINSTANCE();
 
-    private Label error;
     @FXML
     private TextField speedSnake;
 
@@ -50,6 +47,12 @@ public class SettingWindow {
 
     @FXML
     void initialize() {
+        speedSnake.setText(Integer.toString(parameters.getSpeed()));
+        sizeField.setText(Integer.toString(parameters.getFieldSize()));
+        foodOnField.setText(Integer.toString(parameters.getCountFoods()));
+        foodGoal.setText(Integer.toString(parameters.getGoal()));
+        amountOfBarriers.setText(Integer.toString(parameters.getCountBarriers()));
+
         applyButton.setOnAction(event -> {
             if (!Objects.equals(sizeField.getText(), "") || !Objects.equals(foodOnField.getText(), "") || !Objects.equals(amountOfBarriers.getText(), "") || !Objects.equals(foodGoal.getText(), "") || !Objects.equals(speedSnake.getText(), "")) {
                 try {
@@ -64,7 +67,11 @@ public class SettingWindow {
                     return;
                 }
                 if (mapSize > 2 && mapSize <= 100 && countFoods > 0 && countBarriers > -1 && goal > 1 && countBarriers <= mapSize * mapSize / 2 && countFoods < mapSize * mapSize - countBarriers && speed > 0 && speed <= 500) {
-                    parameters = new Parameters(mapSize, countFoods, countBarriers, goal, speed);
+                    parameters.setFieldSize(mapSize);
+                    parameters.setCountBarriers(countBarriers);
+                    parameters.setCountFoods(countFoods);
+                    parameters.setGoal(goal);
+                    parameters.setSpeed(speed);
                     applyButton.getScene().getWindow().hide();
                     MainFX application = new MainFX(parameters);
                     Stage stage = new Stage();
@@ -84,7 +91,12 @@ public class SettingWindow {
 
         defaultButton.setOnAction(event -> {
             defaultButton.getScene().getWindow().hide();
-            MainFX application = new MainFX();
+            parameters.setFieldSize(20);
+            parameters.setCountBarriers(13);
+            parameters.setCountFoods(5);
+            parameters.setGoal(20);
+            parameters.setSpeed(150);
+            MainFX application = new MainFX(parameters);
             Stage stage = new Stage();
             try {
                 application.start(stage);
@@ -108,11 +120,6 @@ public class SettingWindow {
             stage.setScene(new Scene(root));
             stage.show();
         });
-    }
-
-
-    public Parameters tellParameters() {
-        return parameters;
     }
 
     private void wrongInputData() {
