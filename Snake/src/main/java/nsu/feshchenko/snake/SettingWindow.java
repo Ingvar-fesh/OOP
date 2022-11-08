@@ -32,7 +32,7 @@ public class SettingWindow {
 
     @FXML
     private TextField foodGoal;
-
+    
     @FXML
     private Button defaultButton;
 

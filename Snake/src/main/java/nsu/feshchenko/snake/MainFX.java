@@ -16,11 +16,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import nsu.feshchenko.snake.graphics.Graphics;
 import nsu.feshchenko.snake.models.*;
-
 import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
 
 
 public class MainFX extends Application {
@@ -120,7 +118,6 @@ public class MainFX extends Application {
         graphicsWork.drawScore(gc, foodGenerator.getCurrentFoods());
         graphicsWork.drawSnake(gc, snake.getHead(), snake.getBody(), field.getSQUARE_SIZE());
         eatFood();
-
 
         if (snake.getBody().size() > 1) {
             Point newElem = snake.getBody().get(snake.getBody().size() - 1);
