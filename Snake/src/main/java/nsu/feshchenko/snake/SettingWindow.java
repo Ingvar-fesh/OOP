@@ -5,22 +5,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import nsu.feshchenko.snake.models.Parameters;
+import nsu.feshchenko.snake.models.Data;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
 public class SettingWindow {
-    private int mapSize = -1;
-    private int countFoods = -1;
-    private int countBarriers = -1;
-    private int goal = -1;
+    private int mapSize;
+    private int countFoods;
+    private int countBarriers;
+    private int goal;
+    private int speed;
+    private final Data parameters = Data.getINSTANCE();
 
-    private Parameters parameters = new Parameters();
+    @FXML
+    private TextField speedSnake;
 
     @FXML
     private TextField amountOfBarriers;
@@ -30,8 +32,7 @@ public class SettingWindow {
 
     @FXML
     private TextField foodGoal;
-
-
+    
     @FXML
     private Button defaultButton;
 
@@ -46,14 +47,31 @@ public class SettingWindow {
 
     @FXML
     void initialize() {
+        speedSnake.setText(Integer.toString(parameters.getSpeed()));
+        sizeField.setText(Integer.toString(parameters.getFieldSize()));
+        foodOnField.setText(Integer.toString(parameters.getCountFoods()));
+        foodGoal.setText(Integer.toString(parameters.getGoal()));
+        amountOfBarriers.setText(Integer.toString(parameters.getCountBarriers()));
+
         applyButton.setOnAction(event -> {
-            if (!Objects.equals(sizeField.getText(), "") || !Objects.equals(foodOnField.getText(), "") || !Objects.equals(amountOfBarriers.getText(), "") || !Objects.equals(foodGoal.getText(), "")) {
-                mapSize = Integer.parseInt(sizeField.getText());
-                countFoods = Integer.parseInt(foodOnField.getText());
-                countBarriers = Integer.parseInt(amountOfBarriers.getText());
-                goal = Integer.parseInt(foodGoal.getText());
-                if (mapSize > 5 && countFoods > 0 && countBarriers > -1 && goal > 1) {
-                    parameters = new Parameters(mapSize, countFoods, countBarriers, goal);
+            if (!Objects.equals(sizeField.getText(), "") || !Objects.equals(foodOnField.getText(), "") || !Objects.equals(amountOfBarriers.getText(), "") || !Objects.equals(foodGoal.getText(), "") || !Objects.equals(speedSnake.getText(), "")) {
+                try {
+                    mapSize = Integer.parseInt(sizeField.getText());
+                    countFoods = Integer.parseInt(foodOnField.getText());
+                    countBarriers = Integer.parseInt(amountOfBarriers.getText());
+                    goal = Integer.parseInt(foodGoal.getText());
+                    speed = Integer.parseInt(speedSnake.getText());
+                }
+                catch (NumberFormatException e){
+                    wrongInputData();
+                    return;
+                }
+                if (mapSize > 2 && mapSize <= 100 && countFoods > 0 && countBarriers > -1 && goal > 1 && countBarriers <= mapSize * mapSize / 2 && countFoods < mapSize * mapSize - countBarriers && speed > 0 && speed <= 500) {
+                    parameters.setFieldSize(mapSize);
+                    parameters.setCountBarriers(countBarriers);
+                    parameters.setCountFoods(countFoods);
+                    parameters.setGoal(goal);
+                    parameters.setSpeed(speed);
                     applyButton.getScene().getWindow().hide();
                     MainFX application = new MainFX(parameters);
                     Stage stage = new Stage();
@@ -63,17 +81,22 @@ public class SettingWindow {
                         throw new RuntimeException(e);
                     }
                 } else {
-                    System.out.println("wrong input");
+                    wrongInputData();
                 }
             } else {
-                System.out.println("empty fields");
+                wrongInputData();
             }
 
         });
 
         defaultButton.setOnAction(event -> {
             defaultButton.getScene().getWindow().hide();
-            MainFX application = new MainFX();
+            parameters.setFieldSize(20);
+            parameters.setCountBarriers(13);
+            parameters.setCountFoods(5);
+            parameters.setGoal(20);
+            parameters.setSpeed(150);
+            MainFX application = new MainFX(parameters);
             Stage stage = new Stage();
             try {
                 application.start(stage);
@@ -99,7 +122,19 @@ public class SettingWindow {
         });
     }
 
-    public Parameters tellParameters() {
-        return parameters;
+    private void wrongInputData() {
+        applyButton.getScene().getWindow().hide();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("wrong-data.fxml"));
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Parent root = loader.getRoot();
+        Stage stage = new Stage();
+        stage.close();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }

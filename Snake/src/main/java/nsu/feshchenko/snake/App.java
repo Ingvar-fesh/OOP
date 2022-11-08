@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import nsu.feshchenko.snake.models.Data;
 
 import java.io.IOException;
 
@@ -23,7 +24,7 @@ public class App {
     void initialize() {
         playButton.setOnAction(event -> {
             playButton.getScene().getWindow().hide();
-            MainFX application = new MainFX();
+            MainFX application = new MainFX(Data.getINSTANCE());
             Stage stage = new Stage();
             try {
                 application.start(stage);

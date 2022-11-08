@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: Yellow;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nsu.feshchenko.snake.WrongData">
+    <children>
+        <Text layoutX="150.0" layoutY="50.0" text="Wrong input data!" textAlignment="CENTER">
+            <font>
+                <Font size="40" />
+            </font>
+        </Text>
+        <Text layoutX="20" layoutY="100" text="Recommended parameters:">
+            <font>
+                <Font size="20" />
+            </font>
+        </Text>
+
+        <Button fx:id="okayButton" alignment="CENTER" layoutX="260.0" layoutY="300.0" prefHeight="40" prefWidth="100" text="Continue">
+            <font>
+                <Font size="15" />
+            </font>
+        </Button>
+
+        <Text layoutX="20" layoutY="140" text="1. Size of field:  from 3 to 100"/>
+        <Text layoutY="160" layoutX="20" text="2. Amount of barriers:  from 0 to (size of field * size of field / 2)"/>
+        <Text layoutY="180" layoutX="20" text="3. Amount of foods:  from 1 to (size of field * size of field - amount of barriers)"/>
+        <Text layoutX="20" layoutY="200" text="4. Goal:  from 1"/>
+        <Text layoutY="220" layoutX="20" text="5. Speed:  from 1 to 500"/>
+    </children>
+</AnchorPane>
